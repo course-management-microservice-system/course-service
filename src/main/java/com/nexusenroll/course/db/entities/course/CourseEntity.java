@@ -1,4 +1,4 @@
-package com.nexusenroll.course.db;
+package com.nexusenroll.course.db.entities.course;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

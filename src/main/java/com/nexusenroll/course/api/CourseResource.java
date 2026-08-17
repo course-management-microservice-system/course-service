@@ -1,7 +1,8 @@
 package com.nexusenroll.course.api;
 
-import com.nexusenroll.course.db.CourseEntity;
 import com.nexusenroll.course.db.CourseRepository;
+import com.nexusenroll.course.db.entities.course.CourseEntity;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;

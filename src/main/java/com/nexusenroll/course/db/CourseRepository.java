@@ -6,6 +6,8 @@ import jakarta.persistence.EntityManager;
 
 import java.util.List;
 
+import com.nexusenroll.course.db.entities.course.CourseEntity;
+
 @Singleton
 public class CourseRepository {
 
