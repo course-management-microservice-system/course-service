@@ -1,21 +1,55 @@
 package com.nexusenroll.course.db.entities.course;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "courses")
 public class CourseEntity {
 
     @Id
-    private String courseId; // e.g., CS101
-    private String name;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "courseId", length = 36)
+    private String courseId;
+
+    @Column(name = "courseCode", length = 20, nullable = false)
+    private String courseCode;
+
+    @Column(nullable = false, length = 150)
+    private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Column(nullable = false, length = 50)
+    private String department;
+
+    // Soft reference to Faculty member in Auth Service
+    @Column(name = "instructorId", length = 36)
     private String instructorId;
+
+    @Column(nullable = false)
     private int totalCapacity;
+
+    @Column(nullable = false)
     private int availableSeats;
 
+    // e.g. MON, WED, FRI
+    @Column(length = 10)
+    private String scheduleDay;
+
+    private LocalTime startTime;
+
+    private LocalTime endTime;
+
+    // e.g. Lab 02, Hall W001
+    @Column(length = 50)
+    private String location;
+
+    @Column(nullable = false)
+    private boolean active = true;
+
+    // Required by JPA and JSON deserialization
     public CourseEntity() {
     }
 
@@ -27,12 +61,20 @@ public class CourseEntity {
         this.courseId = courseId;
     }
 
-    public String getName() {
-        return name;
+    public String getCourseCode() {
+        return courseCode;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -41,6 +83,14 @@ public class CourseEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public String getInstructorId() {
@@ -65,5 +115,45 @@ public class CourseEntity {
 
     public void setAvailableSeats(int availableSeats) {
         this.availableSeats = availableSeats;
+    }
+
+    public String getScheduleDay() {
+        return scheduleDay;
+    }
+
+    public void setScheduleDay(String scheduleDay) {
+        this.scheduleDay = scheduleDay;
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

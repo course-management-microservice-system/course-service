@@ -5,7 +5,7 @@
     
     <persistence-unit name="course-pu" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>com.nexusenroll.course.db.CourseEntity</class>
+        <class>com.nexusenroll.course.db.entities.course.CourseEntity</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/nexusenroll_course?useSSL=false&amp;serverTimezone=UTC"/>
