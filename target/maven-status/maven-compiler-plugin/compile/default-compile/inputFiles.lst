@@ -3,8 +3,8 @@
 /home/Nessa/Micro/course-service/src/main/java/com/nexusenroll/course/logic/JwtUtility.java
 /home/Nessa/Micro/course-service/src/main/java/com/nexusenroll/course/api/CourseResource.java
 /home/Nessa/Micro/course-service/src/main/java/com/nexusenroll/course/CourseApplication.java
-/home/Nessa/Micro/course-service/src/main/java/com/nexusenroll/course/config/CorsFeature.java
 /home/Nessa/Micro/course-service/src/main/java/com/nexusenroll/course/db/CourseEntity.java
+/home/Nessa/Micro/course-service/src/main/java/com/nexusenroll/course/config/WebFeature.java
 /home/Nessa/Micro/course-service/src/main/java/com/nexusenroll/course/db/CourseRepository.java
 /home/Nessa/Micro/course-service/src/main/java/com/nexusenroll/course/config/Secured.java
 /home/Nessa/Micro/course-service/src/main/java/com/nexusenroll/course/config/AuthenticationFilter.java

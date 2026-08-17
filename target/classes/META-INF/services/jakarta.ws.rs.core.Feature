@@ -1,1 +1,1 @@
-com.nexusenroll.auth.config.CorsFeature
+com.nexusenroll.auth.config.WebFeature
