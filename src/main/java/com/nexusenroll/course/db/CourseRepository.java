@@ -4,10 +4,13 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.NoResultException;
 
 import java.util.List;
 
 import com.nexusenroll.course.db.entities.course.CourseEntity;
+import com.nexusenroll.course.db.entities.prerequisite.CoursePrerequisiteEntity;
 
 @Singleton
 public class CourseRepository {
@@ -85,6 +88,88 @@ public class CourseRepository {
             }
 
             throw e;
+        }
+
+    }
+
+    // ==========================================
+    // CAPACITY MANAGEMENT (SAGA PATTERN)
+    // ==========================================
+
+    /**
+     * Reserves a seat using pessimistic locking to prevent race conditions.
+     * Returns true if successful, false if the course is full.
+     */
+    public boolean reserveSeat(String courseId) {
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            // Lock the row so no other transaction can read/write it until we commit
+            CourseEntity course = em.find(CourseEntity.class, courseId, LockModeType.PESSIMISTIC_WRITE);
+
+            if (course == null || course.getAvailableSeats() <= 0) {
+                tx.rollback();
+                return false;
+            }
+
+            course.setAvailableSeats(course.getAvailableSeats() - 1);
+            em.merge(course);
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            if (tx.isActive())
+                tx.rollback();
+            throw e;
+        }
+    }
+
+    /**
+     * Releases a seat (used when a student drops, or as a Saga compensating
+     * transaction).
+     */
+    public void releaseSeat(String courseId) {
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            CourseEntity course = em.find(CourseEntity.class, courseId, LockModeType.PESSIMISTIC_WRITE);
+
+            if (course != null && course.getAvailableSeats() < course.getTotalCapacity()) {
+                course.setAvailableSeats(course.getAvailableSeats() + 1);
+                em.merge(course);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive())
+                tx.rollback();
+            throw e;
+        }
+    }
+
+    // ==========================================
+    // PREREQUISITES & REPORTS
+    // ==========================================
+
+    public List<CoursePrerequisiteEntity> getPrerequisites(String courseId) {
+        return em.createQuery(
+                "SELECT p FROM CoursePrerequisiteEntity p WHERE p.courseId = :courseId",
+                CoursePrerequisiteEntity.class)
+                .setParameter("courseId", courseId)
+                .getResultList();
+    }
+
+    /**
+     * Finds a CourseEntity by its course code (e.g., "SCS2303").
+     * Returns null if no course is found.
+     */
+    public CourseEntity findByCourseCode(String courseCode) {
+        try {
+            return em.createQuery(
+                    "SELECT c FROM CourseEntity c WHERE c.courseCode = :courseCode",
+                    CourseEntity.class)
+                    .setParameter("courseCode", courseCode)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null; // Course not found
         }
     }
 }
